@@ -1,0 +1,69 @@
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+function BoookItem({book,onToogleRead,onDelete,onUpdatePages}) {
+  const [count, setCount] = useState(0)
+
+  return (
+    <>
+    <div style={{color: book.read ? "red" : "green"}}>
+      <input type="checkbox" name="readed" id="readed" />
+      <h6>{book.read ? <del>{book.title}</del> - <strong>{book.pages}</strong> : <p> {book.title} - {book.pages}</p> }</h6>
+      <button type="button" onClick={onUpdatePages(book.id,50)}>+50</button>
+      <button type="button" onClick={onUpdatePages(book.id,50)}>-50</button>
+      <button type="button" onClick={onDelete(book.id)}>Usun</button>
+    </div>
+    </>
+  )
+}
+
+export default BoookItem
+
+
+import React from "react";
+import BoookItem from "./BookItem";
+
+function App() {
+    const [bookList, setBookList] = React.useState([
+        { id: 1, title: "Harry Potter", pages: 350, read: false },
+        { id: 2, title: "Władca Pierścieni", pages: 500, read: true },
+        { id: 3, title: "Wiedźmin", pages: 300, read: false },
+        { id: 4, title: "1984", pages: 250, read: true },
+        { id: 5, title: "Hobbit", pages: 400, read: false }
+    ]);
+    const onToogleRead = (id) => {
+        bookList.forEach((book) => {
+            if(book.id == id){
+                book.read = false;
+                return;
+            }
+        })
+    }
+    const onDelete = (id) => {
+        const newBookList = [];
+        bookList.filter((book) => {
+            if(book.id != id){
+                newBookList.push(book);
+            }
+    })
+        setBookList(newBookList);}
+    const onUpdatePages = (id,newPages) => {
+        bookList.forEach((book) => {
+            if(book.id == id){
+                book.pages += newPages;
+                if(book.pages < 50) book.pages = 50;
+                return;
+            }})
+    }
+    return (
+        <>
+       {bookList.map((book) => {
+        return <BoookItem  key={book.id} book={book} onToogleRead={onToogleRead} onDelete={onDelete} onUpdatePages={onUpdatePages}/>
+       })}
+
+        </>
+    );
+}
+
+export default App 
